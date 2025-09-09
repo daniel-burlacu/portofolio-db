@@ -134,7 +134,7 @@ export default function HomePage() {
            <Typography sx={{ opacity: 0.9 }}>
             <b>Gofore</b>: day-to-day tasks, fully employed from 2023.
            </Typography>
-          <Typography sx={{ opacity: 0.9 }}>
+          <Typography sx={{ opacity: 0.9, mt: 1 }}>
             <b>Solana Ark Foundation</b>: decentralized veterinary data with verifiable medical records,
             vaccination NFTs, and role-based access for cabinets, shelters, and owners. Exploring validator
             governance, staking economics, and privacy-aware data sharing.
