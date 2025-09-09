@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { keyframes } from '@mui/system';              // <-- add this
 import { Paper, Stack, Box, Typography, Button, Chip, Container, Divider } from '@mui/material';
-
+import DownloadIcon from '@mui/icons-material/Download';
 // little animations
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -74,6 +74,17 @@ export default function HomePage() {
             {/* Intro */}
             <Stack spacing={1.25} sx={{ minWidth: 0 }}>
               <Typography variant="h3" fontWeight={900}>Daniel Burlacu</Typography>
+               <Button
+    size="small"
+    variant="outlined"
+    startIcon={<DownloadIcon />}
+    component="a"
+    href="/cv/Daniel_Burlacu_CV.pdf"
+    download
+    sx={{ ml: { xs: 0, sm: 1 } }}
+  >
+    Download CV
+  </Button>
               <Typography variant="h6" sx={{ opacity: 0.9 }}>
                 Full-stack / Web3 Developer & Blockchain Intelligence Consultant
               </Typography>
@@ -206,6 +217,7 @@ export default function HomePage() {
               'Vite',
               'React',
               'Nest.js',
+              'Next.js',
               'Node.js',
               'web3.js',
               'solanakit',
