@@ -1,14 +1,8 @@
 'use client';
-
-import Link from 'next/link';
-import { COURSES } from '@/helpers/courses';
 import {
   Box,
   Container,
-  Paper,
   Typography,
-  Button,
-  Grid
 } from '@mui/material';
 
 // If you're on MUI v5, use this instead:

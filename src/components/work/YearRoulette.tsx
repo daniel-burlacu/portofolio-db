@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { Box, ButtonBase, IconButton, Stack, Typography } from '@mui/material';
 import { animate, motion, useMotionValue } from 'framer-motion';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -29,11 +29,14 @@ export default function YearRoulette({ years, value, onChange }: Props) {
   // center current value in the middle copy
   const idxInYears = Math.max(0, years.indexOf(value));
   const centeredTrackIndex = baseStart + idxInYears;
-  const yForIndex = (trackIndex: number) => -(trackIndex - CENTER) * ITEM_H;
+  const yForIndex = useCallback(
+    (trackIndex: number) => -(trackIndex - CENTER) * ITEM_H,
+    [CENTER, ITEM_H]
+  );
 
-  useEffect(() => {
-    y.set(yForIndex(centeredTrackIndex));
-  }, [centeredTrackIndex, y]);
+useEffect(() => {
+  y.set(yForIndex(centeredTrackIndex));
+}, [centeredTrackIndex, y, yForIndex]);
 
   const spinning = useRef(false);
 
