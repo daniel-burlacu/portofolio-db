@@ -131,6 +131,9 @@ export default function HomePage() {
         {/* CURRENT FOCUS */}
         <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
           <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>Current Focus</Typography>
+           <Typography sx={{ opacity: 0.9 }}>
+            <b>Gofore</b>: day-to-day tasks, fully employed from 2023.
+           </Typography>
           <Typography sx={{ opacity: 0.9 }}>
             <b>Solana Ark Foundation</b>: decentralized veterinary data with verifiable medical records,
             vaccination NFTs, and role-based access for cabinets, shelters, and owners. Exploring validator
@@ -153,17 +156,17 @@ export default function HomePage() {
             <ProjectItem
               title="Solana Ark Foundation"
               blurb="Decentralized veterinary platform—on-chain animal records, NFTs for vaccines/ownership, validator governance."
-              tech={['Solana', 'Anchor', 'TypeScript', 'React', 'NestJS']}
+              tech={['Solana', 'Anchor', 'TypeScript', 'React', 'Wallet Adapter','SolanaKit', 'Rust', 'MUI','Mocha']}
             />
             <ProjectItem
               title="Inspector Seppo AI"
               blurb="AI-assisted education flows using Anthropic via AWS Bedrock and serverless Lambdas."
-              tech={['AWS', 'Lambda', 'Bedrock', 'TypeScript']}
+              tech={['AWS', 'Lambda', 'Anthropic', 'TypeScript','Node.JS','MUI']}
             />
             <ProjectItem
               title="CRUD App (Solana)"
               blurb="Journal entries on-chain with clean Anchor program patterns and a minimal React UI."
-              tech={['Anchor', 'React', 'Wallet Adapter']}
+              tech={['Solana','Anchor', 'React','TypeScript', 'Wallet Adapter','SolanaKit','Rust','Mocha', 'MUI']}
             />
           </Stack>
         </Paper>
