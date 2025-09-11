@@ -74,17 +74,17 @@ export default function HomePage() {
             {/* Intro */}
             <Stack spacing={1.25} sx={{ minWidth: 0 }}>
               <Typography variant="h3" fontWeight={900}>Daniel Burlacu</Typography>
-               <Button
-    size="small"
-    variant="outlined"
-    startIcon={<DownloadIcon />}
-    component="a"
-    href="/cv/Daniel_Burlacu_CV.pdf"
-    download
-    sx={{ ml: { xs: 0, sm: 1 } }}
-  >
-    Download CV
-  </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                startIcon={<DownloadIcon />}
+                component="a"
+                href="/cv/Daniel_Burlacu_CV.pdf"
+                download
+                sx={{ ml: { xs: 0, sm: 1 } }}
+              >
+                Download CV
+              </Button>
               <Typography variant="h6" sx={{ opacity: 0.9 }}>
                 Full-stack / Web3 Developer & Blockchain Intelligence Consultant
               </Typography>
@@ -131,9 +131,9 @@ export default function HomePage() {
         {/* CURRENT FOCUS */}
         <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
           <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>Current Focus</Typography>
-           <Typography sx={{ opacity: 0.9 }}>
+          <Typography sx={{ opacity: 0.9 }}>
             <b>Gofore</b>: day-to-day tasks, fully employed from 2023.
-           </Typography>
+          </Typography>
           <Typography sx={{ opacity: 0.9, mt: 1 }}>
             <b>Solana Ark Foundation</b>: decentralized veterinary data with verifiable medical records,
             vaccination NFTs, and role-based access for cabinets, shelters, and owners. Exploring validator
@@ -156,17 +156,18 @@ export default function HomePage() {
             <ProjectItem
               title="Solana Ark Foundation"
               blurb="Decentralized veterinary platform—on-chain animal records, NFTs for vaccines/ownership, validator governance."
-              tech={['Solana', 'Anchor', 'TypeScript', 'React', 'Wallet Adapter','SolanaKit', 'Rust', 'MUI','Mocha']}
+              tech={['Solana', 'Anchor', 'TypeScript', 'React', 'Wallet Adapter', 'SolanaKit', 'Rust', 'MUI', 'Mocha']}
+              website="https://solana-ark-foundation.xyz"
             />
             <ProjectItem
               title="Inspector Seppo AI"
               blurb="AI-assisted education flows using Anthropic via AWS Bedrock and serverless Lambdas."
-              tech={['AWS', 'Lambda', 'Anthropic', 'TypeScript','Node.JS','MUI']}
+              tech={['AWS', 'Lambda', 'Anthropic', 'TypeScript', 'Node.JS', 'MUI']}
             />
             <ProjectItem
               title="CRUD App (Solana)"
               blurb="Journal entries on-chain with clean Anchor program patterns and a minimal React UI."
-              tech={['Solana','Anchor', 'React','TypeScript', 'Wallet Adapter','SolanaKit','Rust','Mocha', 'MUI']}
+              tech={['Solana', 'Anchor', 'React', 'TypeScript', 'Wallet Adapter', 'SolanaKit', 'Rust', 'Mocha', 'MUI']}
             />
           </Stack>
         </Paper>
@@ -260,14 +261,37 @@ function ProjectItem({
   title,
   blurb,
   tech,
+  website,
 }: {
   title: string;
   blurb: string;
   tech: string[];
+  website?: string;
+
 }) {
   return (
     <Box>
-      <Typography variant="subtitle1" fontWeight={700}>{title}</Typography>
+      {website ? (
+        <Link
+          href={website}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'none' }}
+        >
+          <Typography
+            variant="subtitle1"
+            fontWeight={700}
+            sx={{
+              color: 'primary.main',                 // same color as your buttons
+              '&:hover': { textDecoration: 'underline' },
+            }}
+          >
+            {title}
+          </Typography>
+        </Link>
+      ) : (
+        <Typography variant="subtitle1" fontWeight={700}>{title}</Typography>
+      )}
       <Typography sx={{ opacity: 0.9 }}>{blurb}</Typography>
       <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
         {tech.map((t) => (

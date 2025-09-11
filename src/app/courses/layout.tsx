@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
 export default function CoursesLayout({ children }: { children: React.ReactNode }) {
   return (

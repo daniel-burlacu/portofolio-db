@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { YearBlock } from '@/data/work';
 import ReviewsModal from '@/features/reviews/ReviewsModal';
 import { getReviewsForTitle, type ReviewImage } from '@/data/reviews';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 type Props = { block: YearBlock; maxStaticRows?: number };
 
@@ -100,17 +102,51 @@ export default function YearCards({ block, maxStaticRows = 3 }: Props) {
                   )}
 
                   {/* Reviews button (only if images exist) */}
-                  {reviews && (
+                  {/* Actions: GitHub / Website / Reviews (only those that exist) */}
+                  {(p.github || p.link || reviews) && (
                     <Box sx={{ mt: 1.5 }}>
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        onClick={() => openReviews(p.title, reviews, 0)}
-                      >
-                        {reviews.length > 1 ? 'View reviews' : 'View review'}
-                      </Button>
+                      <Stack direction="row" spacing={1} flexWrap="wrap">
+                        {p.github && (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            startIcon={<GitHubIcon />}
+                            component="a"
+                            href={p.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            GitHub
+                          </Button>
+                        )}
+
+                        {p.link && (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            startIcon={<LaunchIcon />}
+                            component="a"
+                            href={p.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Website
+                          </Button>
+                        )}
+
+                        {reviews && (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => openReviews(p.title, reviews, 0)}
+                          >
+                            {reviews.length > 1 ? 'Reviews' : 'Review'}
+                          </Button>
+                        )}
+                      </Stack>
                     </Box>
                   )}
+
                 </Paper>
               );
             })}

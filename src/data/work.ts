@@ -1,5 +1,23 @@
-export type Project = { title: string; company?: string; summary: string; tags?: string[]; link?: string };
+export type Project = { 
+  title: string; 
+  company?: string; 
+  summary: string; 
+  tags?: string[]; 
+  link?: string
+  github?: string; 
+};
+
 export type YearBlock = { year: number; items: Project[] };
+
+export type TestimonialImage = {
+  src: string;          // e.g. "/testimonials/seppo-1.jpg"
+  alt?: string;
+  caption?: string;
+  width?: number;       // optional, if you know it
+  height?: number;      // optional
+};
+
+
 
 export const WORK: YearBlock[] = [
   {
@@ -10,6 +28,8 @@ export const WORK: YearBlock[] = [
         company: "Gofore FI/ES",
         summary: " GovStack accelerates the digital transformation of government services, utilising recognized international best practices for public sector digitization.",
         tags: ["Typescript", "MUI", "REACT", "Node.JS","Router", "Figma", "UI/UX","Docker","Agile","Scrum"],
+        link: "https://sandbox.govstack.global/",
+        github: "https://github.com/GovStackWorkingGroup"
       },
       {
         title: "Software Development Cookbook",
@@ -21,11 +41,13 @@ export const WORK: YearBlock[] = [
         title: "Workshop — Crypto in Illicit Political Financing (hands-on)",
         summary: "Hands-on training for analysts: Tor/DNMs, BTC/Monero tracing, OPSEC.",
         tags: ["Training", "Blockchain", "Investigation", "Presentation", "Workshop","Crypto Forensics", "Sparrow","MetaMask","Explorers","Solana","Bitcoin","Ethereum", "Monero", "Maltego", "Chainalysis" ,"Etherscan","Blockchain Analysis"],
+        github:"https://github.com/daniel-burlacu/Workshop-Crypto-In-Illicit-Political-Financing"
       },
       {
         title: "Workshop — Crypto in Illicit Political Financing",
         summary: "BTC & Ethereum tracing with Sparrow, MetaMask, explorers; practical labs.",
         tags: ["Training", "Blockchain", "Investigation", "Presentation", "Workshop","Crypto Forensics"],
+        github:"https://github.com/daniel-burlacu/Workshop-Crypto-In-Illicit-Political-Financing"
       },
     ],
   },
@@ -38,6 +60,7 @@ export const WORK: YearBlock[] = [
         summary: "AI-enhanced CV quality checks & multilingual pitch gen with AWS Bedrock.",
         tags: ["TypeScript", "AWS","React", "MUI", "AI Prompting", "AI Integration","BedRock","Anthropic","Docker", 
           "GIT","Figma", "UI/UX", "Emotional Intelligence","LLM","Personal Time Tracking","Self-Management"],
+        link: "https://inspector-seppo.gofore.com"
       },
       {
         title: "Solana Ark Foundation",
@@ -46,6 +69,7 @@ export const WORK: YearBlock[] = [
         tags: ["Solana", "Anchor", "Nest.js", "Vite", "MUI", "Architecture","Mocha","Rust","Presentation","AI Script Manipulation","ORM","SQL","GIT",
           "Docker","BluePrint","Figma","UI/UX","CyberSecurity","Product Owner"],
         link: "https://www.solana-ark-foundation.xyz/",
+        github:"https://github.com/daniel-burlacu/solana_ark_foundation_blinks"
       },
       {
         title: "3 Step IT — Asset Management LC",
@@ -68,12 +92,14 @@ export const WORK: YearBlock[] = [
         title: "Cardiff University — HateLab (finalisation)",
         summary: "Data science/ML engineering; dashboard & analysis tooling.",
         tags: ["TypeScript", "Python", "AWS", "Data","React","Node.JS","MUI","Scrum","Agile"],
+        link: "https://hatelab.net/"
       },
       {
         title: "The Risk Protocol",
         summary: "TradingView integration, gasless (Biconomy EOA), ZK-Rollups POC.",
         tags: ["Solidity", "ZK-Rollups", "React", "MUI","Typescript","Node.JS","Smart Contracts","Blockchain","Cryptocurrency","DeFi",
           "Web3","Truffle", "Ganache","Ethers.js","MetaMask","OpenZeppelin","Remix","IPFS","Mocha","Chai"],
+        link:"https://www.riskprotocol.io/"
       },
       {
         title: "Prototyping Move SDK App",
@@ -92,7 +118,8 @@ export const WORK: YearBlock[] = [
         summary: "NFT art & game integrations; slot machine, escape room, giveaways.",
         tags: ["Solidity","Ethereum","Polygon", "NFT-Creation","NFT", "React", "Web3","Truffle","Ganache","Ethers.js","MetaMask","OpenZeppelin","Remix",
            "IPFS","Mocha","Chai","Pinata","UI/UX","Figma","DAO","Cryptocurrency","Blockchain","Smart Contracts","JavaScript","Product Owner"],
-      },
+        github:"https://github.com/daniel-burlacu/behindmaskssociety"
+          },
     ],
   },
   {
@@ -148,6 +175,7 @@ export const WORK: YearBlock[] = [
         company: "HarteHanks UK",
         summary: "Global database for APAC/EMEA/LAD/NA; geo & phone code accuracy.",
         tags: ["Perl","Java", "Oracle", "PL/SQL", "Linux","KSH","DataBase Architecture/Modelling","Consulting"],
+        link: "https://www.hartehanks.com/"
       },
     ],
   },
@@ -159,6 +187,7 @@ export const WORK: YearBlock[] = [
         company: "HarteHanks UK",
         summary: "Data systems engineering; client collaboration across regions.",
         tags:  ["Perl","Java", "Oracle", "PL/SQL", "Linux","KSH","DataBase Architecture/Modelling"],
+        link:"https://www.hartehanks.com/"
       },
     ],
   },
@@ -171,6 +200,7 @@ export const WORK: YearBlock[] = [
         summary: "Automation on RHEL; data acquisition/validation pipelines.",
         tags: ["KSH", "Perl", "Oracle","SQL","Linux","DataBase Architecture/Modelling","Leadership",
           "Communication","Conflict Management"],
+        link:"https://www.xerox.com/en-us"
       },
     ],
   },
@@ -183,6 +213,7 @@ export const WORK: YearBlock[] = [
         summary: "Lead automation for IBM, Gartner, VMware, Symantec, etc.",
         tags: ["KSH", "Perl", "Oracle","SQL","Linux","DataBase Architecture/Modelling","Leadership",
           "Communication","Conflict Management"],
+        link:"https://www.xerox.com/en-us"
       },
     ],
   },
@@ -194,6 +225,7 @@ export const WORK: YearBlock[] = [
         company: "XEROX",
         summary: "CRUD automation & client data pipelines.",
         tags: ["Perl", "Oracle", "Linux","SQL","KSH"],
+        link:"https://www.xerox.com/en-us"
       },
     ],
   },
@@ -205,6 +237,7 @@ export const WORK: YearBlock[] = [
         company: "XEROX",
         summary: "Initial role; built data processing foundations.",
         tags: ["Perl", "SQL", "Linux"],
+        link:"https://www.xerox.com/en-us"
       },
     ],
   },
