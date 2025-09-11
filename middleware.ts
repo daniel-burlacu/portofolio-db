@@ -6,34 +6,34 @@ const REALM = 'Admin Area';
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  // Only guard admin routes
   if (!pathname.startsWith('/admin') && !pathname.startsWith('/api/admin')) {
     return NextResponse.next();
   }
 
-  const user = (process.env.ADMIN_USER || '').trim();
-  const pass = (process.env.ADMIN_PASS || '').trim();
-
-  // If not set, return 500 so you know it's a config issue
-  if (!user || !pass) {
-    return new NextResponse('Admin credentials not configured', { status: 500 });
-  }
+  const user = process.env.ADMIN_USER ?? '';
+  const pass = process.env.ADMIN_PASS ?? '';
 
   const auth = req.headers.get('authorization') || '';
   const [scheme, encoded] = auth.split(' ');
-  if (scheme !== 'Basic' || !encoded) return unauthorized();
+  if (scheme !== 'Basic' || !encoded) {
+    return unauthorized();
+  }
 
   try {
+    // Edge runtime has atob
     const decoded = atob(encoded);
-    const idx = decoded.indexOf(':');
-    const inUser = decoded.slice(0, idx);
-    const inPass = decoded.slice(idx + 1);
+    const sep = decoded.indexOf(':');
+    const inUser = decoded.slice(0, sep);
+    const inPass = decoded.slice(sep + 1);
 
     if (inUser === user && inPass === pass) {
       return NextResponse.next();
     }
   } catch {
-    /* ignore */
+    /* fallthrough */
   }
+
   return unauthorized();
 }
 
@@ -44,4 +44,7 @@ function unauthorized() {
   });
 }
 
-export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };
+// Apply to both page and API under /admin
+export const config = {
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
+};
