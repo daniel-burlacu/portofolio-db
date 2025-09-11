@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { CreateMLCEngine } from "@mlc-ai/web-llm";
 import { useChatUI } from "./ChatProvider";
 import { SYSTEM_PROMPT } from "@/data/recruiterPromt";
-import { saveQA, exportQA, importQA } from '@/data/lib/qaLocal';
+import { saveQA, exportQA } from '@/data/lib/qaLocal';
 
 /** ---- Lightweight types to avoid `any` ---- **/
 
