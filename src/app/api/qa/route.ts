@@ -22,17 +22,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Missing q" }, { status: 400 });
     }
 
-    const payload = {
-      ...body,
-      _savedAt: new Date().toISOString(),
-    };
+    const text = `Q: ${body.q}\nA: ${body.a}\nTime: ${new Date().toISOString()}${body.meta ? `\nMeta: ${JSON.stringify(body.meta)}` : ''}`;
+    const key = `qa/${new Date().toISOString()}-${crypto.randomUUID()}.txt`;
 
-    const key = `qa/${new Date().toISOString()}-${crypto.randomUUID()}.json`;
-
-    await put(key, JSON.stringify(payload, null, 2), {
-  access: "private" as "public", // TS hack, backend understands "private"
-  contentType: "application/json",
-});
+    await put(key, text, {
+      access: "private" as "public",
+      contentType: "text/plain",
+    });
 
     return NextResponse.json({ ok: true, key });
   } catch (err) {
