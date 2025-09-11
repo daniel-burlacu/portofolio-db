@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Box } from "@mui/material";
 import "./globals.css";
+import GenieMountClient  from "@/components/GenieMountClient";
+ // const GenieMount = dynamic(() => import("@/features/AI/genie/GenieMount"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "Daniel Burlacu — Portfolio",
@@ -18,15 +20,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AppRouterCacheProvider options={{ key: "mui" }}>
           <MuiProviders>
-            {/* Flex column wrapper that fills the viewport */}
             <Box sx={{ minHeight: "100svh", display: "flex", flexDirection: "column" }}>
               <Header />
-              {/* Main grows to push the footer down when content is short */}
               <Box component="main" sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
                 {children}
               </Box>
               <Footer />
             </Box>
+
+            {/* 🔮 Genie lives globally, themed by MUI, client-only */}
+            <GenieMountClient />
           </MuiProviders>
         </AppRouterCacheProvider>
       </body>

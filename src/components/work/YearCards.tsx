@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Chip, Paper, Stack, Typography, Button } from '@mui/material';
+import { Box, Chip, Paper, Stack, Typography, Button, Tooltip } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { YearBlock } from '@/data/work';
 import ReviewsModal from '@/features/reviews/ReviewsModal';
 import { getReviewsForTitle, type ReviewImage } from '@/data/reviews';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
+import ComputerIcon from '@mui/icons-material/Computer';
+import BusinessIcon from '@mui/icons-material/Business';
 
 type Props = { block: YearBlock; maxStaticRows?: number };
 
@@ -26,6 +28,21 @@ export default function YearCards({ block, maxStaticRows = 3 }: Props) {
     setModalTitle(title);
     setOpen(true);
   };
+
+  // Map languages to flag emojis + readable labels
+const LANGUAGE_FLAG: Record<string, { flag: string; label: string }> = {
+  English: { flag: '🇬🇧', label: 'English' },   // switch to 🇺🇸 if you prefer
+  Swedish: { flag: '🇸🇪', label: 'Swedish' },
+  Romanian: { flag: '🇷🇴', label: 'Romanian' },
+  Spanish: { flag: '🇪🇸', label: 'Spanish' },
+};
+  
+  // Map work types to icons + labels
+  const WORKTYPE_ICON: Record<string, { icon: React.ReactNode; label: string }> = {
+    Remote: { icon: <ComputerIcon fontSize="small" />, label: 'Remote' },
+    Presential: { icon: <BusinessIcon fontSize="small" />, label: 'Presential' },
+  };
+
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -80,6 +97,84 @@ export default function YearCards({ block, maxStaticRows = 3 }: Props) {
                     },
                   }}
                 >
+                  {/* Top-right badges: languages + work type */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      zIndex: 2,
+                    }}
+                  >
+                    {/* Languages (flags) */}
+                    {p.language?.length ? (
+                      <Stack direction="row" spacing={0.5}>
+                        {p.language.map((lng) => {
+                          const info = LANGUAGE_FLAG[lng];
+                          if (!info) return null;
+                          return (
+                            <Tooltip key={lng} title={info.label} arrow>
+                              <Box
+                                component="span"
+                                sx={{
+                                  fontSize: 18,
+                                  lineHeight: 1,
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: 24,
+                                  height: 24,
+                                  borderRadius: '50%',
+                                  backgroundColor: 'rgba(0,0,0,0.25)',
+                                  border: '1px solid',
+                                  borderColor: 'divider',
+                                  userSelect: 'none',
+                                }}
+                                aria-label={info.label}
+                                role="img"
+                              >
+                                {info.flag}
+                              </Box>
+                            </Tooltip>
+                          );
+                        })}
+                      </Stack>
+                    ) : null}
+
+                    {/* Work type icons */}
+                    {p.workType?.length ? (
+                      <Stack direction="row" spacing={0.75}>
+                        {p.workType.map((wt, i) => {
+                          const info = WORKTYPE_ICON[wt];
+                          if (!info) return null;
+                          return (
+                            <Tooltip key={`${wt}-${i}`} title={info.label} arrow>
+                              <Box
+                                sx={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  width: 28,
+                                  height: 24,
+                                  borderRadius: 1,
+                                  backgroundColor: 'rgba(0,0,0,0.25)',
+                                  border: '1px solid',
+                                  borderColor: 'divider',
+                                }}
+                                aria-label={info.label}
+                              >
+                                {info.icon}
+                              </Box>
+                            </Tooltip>
+                          );
+                        })}
+                      </Stack>
+                    ) : null}
+                  </Box>
+
                   <Typography variant="h6" sx={{ fontWeight: 800 }}>
                     {p.title}
                     {p.company ? (
