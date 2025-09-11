@@ -1,42 +1,32 @@
-// app/api/qa/route.ts
+// /src/app/api/qa/route.ts
 import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 
-// Optional: simple allowlist if you only want to log from your domain
-const ALLOW_ORIGINS = [process.env.PUBLIC_SITE_ORIGIN ?? ""];
+const ALLOW_ORIGINS = (process.env.PUBLIC_SITE_ORIGIN ?? "").split(",").map(s => s.trim()).filter(Boolean);
+// e.g. set PUBLIC_SITE_ORIGIN to: https://danielburlacu.xyz,https://www.danielburlacu.xyz
 
 export async function POST(req: Request) {
   try {
-    // (1) Basic origin check (optional)
     const origin = req.headers.get("origin") || "";
-    if (ALLOW_ORIGINS[0] && !ALLOW_ORIGINS.includes(origin)) {
+    if (ALLOW_ORIGINS.length && !ALLOW_ORIGINS.includes(origin)) {
       return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
     }
 
-    // (2) Read body: { q, a, ts, meta? }
-    const body = await req.json();
-
-    // (3) Minimal validation & consent hint
+    const body = await req.json(); // { q, a, ts, meta? }
     if (!body?.q || typeof body.q !== "string") {
       return NextResponse.json({ ok: false, error: "Missing q" }, { status: 400 });
     }
-    // Optional anonymized meta (user agent only)
-    const userAgent = req.headers.get("user-agent") || "";
 
+    const userAgent = req.headers.get("user-agent") || "";
     const payload = {
       ...body,
-      meta: {
-        ...body.meta,
-        userAgent,
-        savedAt: new Date().toISOString(),
-      },
+      meta: { ...body.meta, userAgent, savedAt: new Date().toISOString() },
     };
 
-    // (4) Unique key per entry (one blob per Q&A)
     const key = `qa/${new Date().toISOString()}-${crypto.randomUUID()}.json`;
 
     await put(key, JSON.stringify(payload, null, 2), {
-      access: "public",
+      access: "public",                  // private is safer; switch to 'public' only if you need public URLs
       contentType: "application/json",
     });
 
