@@ -145,6 +145,7 @@ export default function GenieChatPanel() {
         }
         // NEW: persist this exchange
         saveQA({ q: userMsg.content, a: answer, ts: Date.now() });
+
         // Also send to server (best-effort; ignore errors)
 fetch("/api/qa", {
   method: "POST",

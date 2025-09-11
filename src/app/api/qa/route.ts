@@ -3,35 +3,33 @@ import { put } from "@vercel/blob";
 
 export const runtime = "nodejs";
 
-// Allow both apex and www (or disable check while testing)
-const ALLOW_ORIGINS = (process.env.PUBLIC_SITE_ORIGIN ?? "")
-  .split(",")
-  .map(s => s.trim())
-  .filter(Boolean);
-// Example env: PUBLIC_SITE_ORIGIN="https://danielburlacu.xyz,https://www.danielburlacu.xyz"
-
 export async function POST(req: Request) {
   try {
-    const origin = req.headers.get("origin") || "";
-    if (ALLOW_ORIGINS.length && !ALLOW_ORIGINS.includes(origin)) {
-      return NextResponse.json({ ok: false, error: "Forbidden origin", origin }, { status: 403 });
-    }
-
-    const body = await req.json(); // expect { q, a, ts, meta? }
+    const body = await req.json();            // expect { q, a, ts, meta? }
     if (!body?.q || typeof body.q !== "string") {
       return NextResponse.json({ ok: false, error: "Missing q" }, { status: 400 });
     }
 
-    const text = `Q: ${body.q}\nA: ${body.a}\nTime: ${new Date().toISOString()}${body.meta ? `\nMeta: ${JSON.stringify(body.meta)}` : ''}`;
-    const key = `qa/${new Date().toISOString()}-${crypto.randomUUID()}.txt`;
+    const payload = {
+      ...body,
+      _savedAt: new Date().toISOString(),
+    };
 
-    await put(key, text, {
-      access: "private" as "public",
-      contentType: "text/plain",
+    const key = `qa/${new Date().toISOString()}-${crypto.randomUUID()}.json`;
+
+    // WRITE to Blob
+    const res = await put(key, JSON.stringify(payload, null, 2), {
+      access: "public",                       // keep 'public' until we confirm it works
+      contentType: "application/json",
+      // token: process.env.BLOB_READ_WRITE_TOKEN, // not needed if Blob is bound to project
     });
 
-    return NextResponse.json({ ok: true, key });
+    // Log to Vercel function logs for visibility
+    console.log("Saved Q&A to blob:", res.pathname);
+
+    return NextResponse.json({ ok: true, key: res.pathname });
   } catch (err) {
+    console.error("POST /api/qa failed:", err);
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
   }
 }
