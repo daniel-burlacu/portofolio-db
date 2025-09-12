@@ -32,17 +32,21 @@ type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
 interface NavigatorDeviceMemory extends Navigator {
   deviceMemory?: number;
+  gpu?: {
+    requestAdapter: () => Promise<{
+      features?: { has?: (feature: string) => boolean };
+    } | null>;
+  };
 }
-
+  const adapter = 'gpu' in navigator ? await (navigator as NavigatorDeviceMemory).gpu?.requestAdapter() : null;
 async function pickModelForDevice() {
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   // Check WebGPU + shader-f16 support
-  const adapter = 'gpu' in navigator ? await (navigator as any).gpu.requestAdapter() : null;
   const hasFP16 = !!adapter && adapter.features?.has?.('shader-f16');
 
   // If mobile or low RAM, choose smaller family;
   // if FP16 is NOT supported, avoid f16 builds.
-  if (isMobile || ((navigator as any).deviceMemory ?? 4) < 4) {
+  if (isMobile || ((navigator as NavigatorDeviceMemory).deviceMemory ?? 4) < 4) {
     return hasFP16
       ? 'Qwen2.5-3B-Instruct-q4f16_1-MLC'
       : 'Qwen2.5-3B-Instruct-q4f32_1-MLC';
