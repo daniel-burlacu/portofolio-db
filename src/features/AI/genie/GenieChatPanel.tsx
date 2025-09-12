@@ -34,18 +34,23 @@ interface NavigatorDeviceMemory extends Navigator {
   deviceMemory?: number;
 }
 
-function chooseModel(): string {
-  const nav = navigator as NavigatorDeviceMemory;
+async function pickModelForDevice() {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // Check WebGPU + shader-f16 support
+  const adapter = 'gpu' in navigator ? await (navigator as any).gpu.requestAdapter() : null;
+  const hasFP16 = !!adapter && adapter.features?.has?.('shader-f16');
 
-  // Prefer smaller models on phones/low RAM devices
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(nav.userAgent);
-  const mem = nav.deviceMemory;
-
-  if (isMobile || (mem !== undefined && mem < 4)) {
-    return "Qwen2.5-3B-Instruct-q4f16_1-MLC";
+  // If mobile or low RAM, choose smaller family;
+  // if FP16 is NOT supported, avoid f16 builds.
+  if (isMobile || ((navigator as any).deviceMemory ?? 4) < 4) {
+    return hasFP16
+      ? 'Qwen2.5-3B-Instruct-q4f16_1-MLC'
+      : 'Qwen2.5-3B-Instruct-q4f32_1-MLC';
   }
-
-  return "Llama-3-8B-Instruct-q4f16_1-MLC";
+  // Desktop: try the larger one, but still respect FP16 support
+  return hasFP16
+    ? 'Llama-3-8B-Instruct-q4f16_1-MLC'
+    : 'Llama-3-8B-Instruct-q4f32_1-MLC';
 }
 
 type Engine = Awaited<ReturnType<typeof CreateMLCEngine>>;
@@ -60,33 +65,32 @@ export default function GenieChatPanel() {
     const engineRef = useRef<Engine | null>(null);
     const [webgpuOK, setWebgpuOK] = useState<boolean | null>(null);
 
-    useEffect(() => {
+   useEffect(() => {
   if (!open || ready) return;
 
-  const hasWebGPU = typeof navigator !== "undefined" && "gpu" in navigator;
+  const hasWebGPU = typeof navigator !== 'undefined' && 'gpu' in navigator;
   setWebgpuOK(hasWebGPU);
 
   (async () => {
     try {
       if (!hasWebGPU) {
-        setBootMsg(
-          "WebGPU not available on this device. Try Chrome/Edge on Android. iOS Safari currently doesn’t support WebGPU."
-        );
+        setReady(false);
+        setBootMsg('WebGPU not available on this device.');
         return;
       }
 
-      const MODEL_ID = chooseModel();
+      const MODEL_ID = await pickModelForDevice();
       const engine = await CreateMLCEngine(MODEL_ID);
       engineRef.current = engine;
 
       await engine.chat.completions.create({
-        messages: [{ role: "system", content: "ping" }, { role: "user", content: "hi" }],
+        messages: [{ role: 'system', content: 'ping' }, { role: 'user', content: 'hi' }],
         stream: false,
         temperature: 0,
       });
 
       setReady(true);
-      setBootMsg("Ready.");
+      setBootMsg('Ready.');
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       setReady(false);
