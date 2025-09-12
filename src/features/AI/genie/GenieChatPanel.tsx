@@ -19,28 +19,36 @@ type ChatDelta = {
 };
 
 // Non-stream response (we don’t use it, but keep to satisfy the signature)
-type NonStreamResponse = {
-    choices?: Array<{ message?: { content?: string } }>;
-};
+// type NonStreamResponse = {
+//     choices?: Array<{ message?: { content?: string } }>;
+// };
 
 // Messages passed to the engine
 type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
-// The engine surface we use (narrowed to what this component calls)
-type ChatEngine = {
-    chat: {
-        completions: {
-            create: (args: {
-                messages: ChatMessage[];
-                stream?: boolean;
-                temperature?: number;
-                top_p?: number;
-            }) => Promise<AsyncIterable<ChatDelta> | NonStreamResponse>;
-        };
-    };
-};
+// Removed custom ChatEngine type; we rely on MLCEngine from the library for correct overloads.
 
-const MODEL_ID = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // smaller & faster first-load
+// const MODEL_ID = "Qwen2.5-3B-Instruct-q4f16_1-MLC"; // smaller & faster first-load
+
+interface NavigatorDeviceMemory extends Navigator {
+  deviceMemory?: number;
+}
+
+function chooseModel(): string {
+  const nav = navigator as NavigatorDeviceMemory;
+
+  // Prefer smaller models on phones/low RAM devices
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(nav.userAgent);
+  const mem = nav.deviceMemory;
+
+  if (isMobile || (mem !== undefined && mem < 4)) {
+    return "Qwen2.5-3B-Instruct-q4f16_1-MLC";
+  }
+
+  return "Llama-3-8B-Instruct-q4f16_1-MLC";
+}
+
+type Engine = Awaited<ReturnType<typeof CreateMLCEngine>>;
 
 export default function GenieChatPanel() {
     const { open, setOpen, ready, setReady } = useChatUI();
@@ -49,37 +57,44 @@ export default function GenieChatPanel() {
     const [msgs, setMsgs] = useState<Msg[]>([
         { role: "assistant", content: "Hi! Paste a job description or ask if Daniel fits a role." }
     ]);
-    const engineRef = useRef<ChatEngine | null>(null);
+    const engineRef = useRef<Engine | null>(null);
     const [webgpuOK, setWebgpuOK] = useState<boolean | null>(null);
 
     useEffect(() => {
-        if (!open || ready) return;
-        const hasWebGPU = typeof navigator !== "undefined" && "gpu" in navigator;
-        setWebgpuOK(hasWebGPU);
+  if (!open || ready) return;
 
-        (async () => {
-            try {
-                // Create and warm the engine
-                const engine = (await CreateMLCEngine(MODEL_ID)) as unknown as ChatEngine;
-                engineRef.current = engine;
+  const hasWebGPU = typeof navigator !== "undefined" && "gpu" in navigator;
+  setWebgpuOK(hasWebGPU);
 
-                await engineRef.current.chat.completions.create({
-                    messages: [
-                        { role: "system", content: "ping" },
-                        { role: "user", content: "hi" }
-                    ],
-                    stream: false,
-                    temperature: 0.0
-                });
+  (async () => {
+    try {
+      if (!hasWebGPU) {
+        setBootMsg(
+          "WebGPU not available on this device. Try Chrome/Edge on Android. iOS Safari currently doesn’t support WebGPU."
+        );
+        return;
+      }
 
-                setReady(true);
-                setBootMsg("Ready.");
-            } catch (e: unknown) {
-                const msg = e instanceof Error ? e.message : String(e);
-                setBootMsg(`Could not start local model: ${msg}`);
-            }
-        })();
-    }, [open, ready, setReady]);
+      const MODEL_ID = chooseModel();
+      const engine = await CreateMLCEngine(MODEL_ID);
+      engineRef.current = engine;
+
+      await engine.chat.completions.create({
+        messages: [{ role: "system", content: "ping" }, { role: "user", content: "hi" }],
+        stream: false,
+        temperature: 0,
+      });
+
+      setReady(true);
+      setBootMsg("Ready.");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setReady(false);
+      setBootMsg(`Could not start local model: ${msg}`);
+    }
+  })();
+}, [open, ready, setReady]);
+
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
@@ -90,7 +105,21 @@ export default function GenieChatPanel() {
     }, [open, setOpen]);
 
     const ask = async () => {
-        if (!input.trim() || !ready || !engineRef.current) return;
+        if (!input.trim()) return;
+  if (!ready || !engineRef.current) {
+    // show a friendly “no WebGPU” message
+    setMsgs((m) => [
+      ...m,
+      { role: "user", content: input.trim() },
+      {
+        role: "assistant",
+        content:
+          "This device/browser doesn’t support WebGPU, so the local (free) model can’t run. Try Chrome/Edge on Android, or use a desktop browser with WebGPU.",
+      },
+    ]);
+    setInput("");
+    return;
+  }
 
         const userMsg: Msg = { role: "user", content: input.trim() };
         setMsgs((m) => [...m, userMsg]);
