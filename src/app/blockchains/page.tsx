@@ -42,41 +42,20 @@ return (
         </Typography>
 
         <Grid container spacing={3} justifyContent="center" alignItems="stretch">
-          {entries.map(([key, course]) => (
-            <Grid key={key} size={{ xs: 12, sm: 10, md: 6 }} display="flex">
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3, borderRadius: 4, bgcolor: 'rgba(2,6,23,0.7)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  width: '100%', minHeight: 380,
-                  display: 'flex', flexDirection: 'column', gap: 2,
-                }}
-              >
-                <Typography variant="h5" sx={{ fontWeight: 800 }}>
-                  {course.label} : Study Guide & Roadmap
-                </Typography>
-
-                <Typography sx={{ opacity: 0.85 }}>
-                  {course.chapters.length ? `${course.chapters.length} chapters` : 'Chapters coming soon'}
-                </Typography>
-
-                <Typography sx={{ opacity: 0.85 }}>
-                  {desc[key] ?? 'Course details coming soon.'}
-                </Typography>
-
-                <Box sx={{ mt: 'auto' }}>
-                  {course.chapters.length ? (
-                    <Link href={`/courses/${key}/1`} style={{ textDecoration: 'none' }}>
-                      <Button variant="contained">View Guide</Button>
+        <Grid size={{ xs:12,md:6}}>
+          <Paper sx={{ p: 3, minHeight: 160 }}>
+            <Typography variant="h6">Journal App</Typography>
+            <Typography variant="body2">
+            Create/Reads/Updates/Deletes journal entries on the Solana blockchain(currently dev only).
+            </Typography>
+              <Box sx={{ mt: 4 }}>
+                    <Link href={`https://crud-app-solana.vercel.app`} style={{ textDecoration: 'none' }}>
+                      <Button variant="contained">View App</Button>
                     </Link>
-                  ) : (
-                    <Button variant="outlined" disabled>Coming soon</Button>
-                  )}
                 </Box>
-              </Paper>
-            </Grid>
-          ))}
+          </Paper>
+
+        </Grid>
         </Grid>
       </Container>
     </Box>
