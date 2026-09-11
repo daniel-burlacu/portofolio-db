@@ -38,11 +38,29 @@ interface NavigatorDeviceMemory extends Navigator {
     } | null>;
   };
 }
-  const adapter = 'gpu' in navigator ? await (navigator as NavigatorDeviceMemory).gpu?.requestAdapter() : null;
-async function pickModelForDevice() {
+
+type GpuAdapterLike = { features?: { has?: (feature: string) => boolean } } | null;
+
+// Probes WebGPU lazily (only when the panel is actually opened) and never throws,
+// so a partial/stub `navigator.gpu` on some mobile browsers can't break module load.
+async function detectWebGPU(): Promise<{ ok: boolean; adapter: GpuAdapterLike }> {
+  if (typeof navigator === 'undefined' || !('gpu' in navigator)) return { ok: false, adapter: null };
+  try {
+    const adapter = await (navigator as NavigatorDeviceMemory).gpu?.requestAdapter();
+    return { ok: !!adapter, adapter: adapter ?? null };
+  } catch {
+    return { ok: false, adapter: null };
+  }
+}
+
+function isSamsungInternet() {
+  return typeof navigator !== 'undefined' && /SamsungBrowser/i.test(navigator.userAgent);
+}
+
+async function pickModelForDevice(adapter: GpuAdapterLike) {
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   // Check WebGPU + shader-f16 support
-  const hasFP16 = !!adapter && adapter.features?.has?.('shader-f16');
+  const hasFP16 = !!adapter?.features?.has?.('shader-f16');
 
   // If mobile or low RAM, choose smaller family;
   // if FP16 is NOT supported, avoid f16 builds.
@@ -72,19 +90,33 @@ export default function GenieChatPanel() {
    useEffect(() => {
   if (!open || ready) return;
 
-  const hasWebGPU = typeof navigator !== 'undefined' && 'gpu' in navigator;
-  setWebgpuOK(hasWebGPU);
+  let cancelled = false;
 
   (async () => {
-    try {
-      if (!hasWebGPU) {
-        setReady(false);
-        setBootMsg('WebGPU not available on this device.');
-        return;
-      }
+    const { ok: hasWebGPU, adapter } = await detectWebGPU();
+    if (cancelled) return;
+    setWebgpuOK(hasWebGPU);
 
-      const MODEL_ID = await pickModelForDevice();
-      const engine = await CreateMLCEngine(MODEL_ID);
+    if (!hasWebGPU) {
+      setReady(false);
+      setBootMsg(
+        isSamsungInternet()
+          ? "Samsung Internet doesn't support WebGPU yet, so the in-browser AI can't run here. Open this site in Chrome for Android (or a desktop browser) to chat with the assistant."
+          : "This browser doesn't support WebGPU, so the local (free) model can't run. Try the latest Chrome, Edge or Arc."
+      );
+      return;
+    }
+
+    try {
+      const MODEL_ID = await pickModelForDevice(adapter);
+      // Guard against a stalled download/compile hanging the "Loading…" state forever on slow mobile connections.
+      const engine = await Promise.race([
+        CreateMLCEngine(MODEL_ID),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Timed out loading the model — check your connection and try again.')), 90_000)
+        ),
+      ]);
+      if (cancelled) return;
       engineRef.current = engine;
 
       await engine.chat.completions.create({
@@ -92,15 +124,19 @@ export default function GenieChatPanel() {
         stream: false,
         temperature: 0,
       });
+      if (cancelled) return;
 
       setReady(true);
       setBootMsg('Ready.');
     } catch (e: unknown) {
+      if (cancelled) return;
       const msg = e instanceof Error ? e.message : String(e);
       setReady(false);
       setBootMsg(`Could not start local model: ${msg}`);
     }
   })();
+
+  return () => { cancelled = true; };
 }, [open, ready, setReady]);
 
 
@@ -121,8 +157,9 @@ export default function GenieChatPanel() {
       { role: "user", content: input.trim() },
       {
         role: "assistant",
-        content:
-          "This device/browser doesn’t support WebGPU, so the local (free) model can’t run. Try Chrome/Edge on Android, or use a desktop browser with WebGPU.",
+        content: isSamsungInternet()
+          ? "Samsung Internet doesn't support WebGPU yet, so the in-browser AI can't run here. Open this site in Chrome for Android (or a desktop browser) to chat with the assistant."
+          : "This device/browser doesn’t support WebGPU, so the local (free) model can’t run. Try the latest Chrome or Edge, or use a desktop browser with WebGPU.",
       },
     ]);
     setInput("");
