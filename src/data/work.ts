@@ -5,6 +5,7 @@ export type Project = {
   tags?: string[]; 
   link?: string
   github?: string;
+  android?: string;
   language?: string[];
   workType?: string[]; 
 };
@@ -22,6 +23,46 @@ export type TestimonialImage = {
 
 
 export const WORK: YearBlock[] = [
+{
+  "year": 2026,
+  "items": [
+    {
+      "title": "AI Expert / Cybersecurity Expert / Senior Software Developer",
+      "company": "Gofore",
+      "summary": "2026–present · Madrid, remote. Designed a segmented VMware cybersecurity lab with Windows and Linux endpoints, DVWA, Mutillidae, Juice Shop and WebGoat. Investigated endpoint telemetry and performed authorized testing of injection, file inclusion, authentication, permissions and input validation.",
+      "tags": [
+        "Kali Linux",
+        "Burp Suite",
+        "Nmap",
+        "Metasploit",
+        "Wazuh",
+        "Sysmon",
+        "OWASP",
+        "VMware"
+      ],
+      "workType": [
+        "Remote"
+      ]
+    },
+    {
+      "title": "Senior Software Engineer — Finnish Ministry of Finance",
+      "company": "Gofore · Current project",
+      "summary": "Secure framework and budget-planning systems and a public government budget publishing and visualization platform. Frontend, backend and cloud delivery; authentication, authorization, API security, secure file handling, secrets management, dependency remediation, automated tests and code review.",
+      "tags": [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "Fastify",
+        "PostgreSQL",
+        "Azure",
+        "Secure SDLC"
+      ],
+      "workType": [
+        "Remote"
+      ]
+    }
+  ]
+},
   {
     year: 2025,
     items: [
@@ -44,8 +85,8 @@ export const WORK: YearBlock[] = [
         workType:["Remote"]
       },
       {
-        title: "Workshop — Crypto in Illicit Political Financing (hands-on)",
-        summary: "Hands-on training for analysts: Tor/DNMs, BTC/Monero tracing, OPSEC.",
+        title: "EUPM — OSINT-Crypto-Dark Web Lab",
+        summary: "14–15 May 2025 · Chișinău, Moldova. Hands-on workshop on cryptocurrencies, dark web research tools, marketplaces and investigative exercises. Recognized by an EUPM letter of appreciation.",
         tags: ["Training", "Blockchain", "Investigation", "Presentation", "Workshop","Crypto Forensics", "Sparrow","MetaMask","Explorers","Solana","Bitcoin","Ethereum", "Monero", "Maltego", "Chainalysis" ,"Etherscan","Blockchain Analysis"],
         github:"https://github.com/daniel-burlacu/Workshop-Crypto-In-Illicit-Political-Financing",
         language: ["English","Swedish","Romanian"],
@@ -53,7 +94,7 @@ export const WORK: YearBlock[] = [
       },
       {
         title: "Workshop — Crypto in Illicit Political Financing",
-        summary: "BTC & Ethereum tracing with Sparrow, MetaMask, explorers; practical labs.",
+        summary: "2 April 2025 · Chișinău, Moldova. EUPM workshop on the use of cryptocurrencies in illicit political financing: Bitcoin and Ethereum tracing, wallet analysis, blockchain explorers and suspicious on-chain activity. Recognized by an EUPM letter of appreciation.",
         tags: ["Blockchain", "Investigation", "Presentation", "Workshop","Crypto Forensics"],
         github:"https://github.com/daniel-burlacu/Workshop-Crypto-In-Illicit-Political-Financing",
         language: ["English","Swedish","Romanian"],
@@ -64,6 +105,45 @@ export const WORK: YearBlock[] = [
   {
     year: 2024,
     items: [
+{
+  "title": "Anivera — CEO / CTO, Web3",
+  "link": "https://www.anivera.xyz/",
+  "company": "Freelance · Side project",
+  "summary": "2024–ongoing · Valencia. Lead product and technical strategy for a blockchain platform supporting animal welfare and environmental stewardship, with secure data and decentralized workflows for veterinarians, researchers, shelters, pet owners and conservationists.",
+  "tags": [
+    "TypeScript",
+    "Rust",
+    "FastAPI",
+    "Next.js",
+    "React",
+    "MUI",
+    "Chakra UI",
+    "Anchor",
+    "Solana"
+  ]
+},
+{
+  "title": "KronosVera — CEO / CTO",
+  "link": "https://www.kronosvera.xyz/",
+  "company": "Freelance · Side project",
+  "summary": "2024–ongoing · Valencia. Founded a lifestyle-tracking product connecting habits, wellbeing, energy and recovery. Led roadmap, architecture and production delivery, including the mobile app, backend, data model, AI lifestyle insights and AWS infrastructure.",
+  "tags": [
+    "React Native",
+    "Expo",
+    "Node.js",
+    "TypeScript",
+    "PostgreSQL",
+    "Amazon Bedrock",
+    "Docker",
+    "AWS EC2",
+    "ECR",
+    "RDS",
+    "Route 53",
+    "Nginx",
+    "GitHub Actions"
+  ],
+  "android": "https://play.google.com/store/apps/details?id=com.kronosvera.app&hl=en"
+},
       {
         title: "Gofore — Inspector Seppo / Hohto CV Checker",
         company: "Gofore FI/ES",
@@ -74,17 +154,7 @@ export const WORK: YearBlock[] = [
         language:["English","Spanish"],
         workType:["Remote"]
       },
-      {
-        title: "Solana Ark Foundation",
-        company:"Startup",
-        summary: "On-chain vet data, PDAs, NFTs for vaccination, validators’ treasury.",
-        tags: ["Solana", "Anchor", "Nest.js", "Vite", "MUI", "Architecture","Mocha","Rust","Presentation","AI Script Manipulation","ORM","SQL","GIT",
-          "Docker","BluePrint","Figma","UI/UX","CyberSecurity","Product Owner"],
-        link: "https://www.solana-ark-foundation.xyz/",
-        github:"https://github.com/daniel-burlacu/solana_ark_foundation_blinks",
-        language:["English","Romanian"],
-        workType:["Remote"]
-      },
+
       {
         title: "3 Step IT — Asset Management LC",
         company: "Gofore",
@@ -208,15 +278,6 @@ export const WORK: YearBlock[] = [
         language:["English"],
         workType:["Remote"]
       },
-      {
-        title: "Software Developer",
-        company: "HarteHanks UK",
-        summary: "Global database for APAC/EMEA/LAD/NA; geo & phone code accuracy.",
-        tags: ["Perl","Java", "Oracle", "PL/SQL", "Linux","KSH","DataBase Architecture/Modelling","Consulting"],
-        link: "https://www.hartehanks.com/",
-        language:["English"],
-        workType:["Remote","Presential"]
-      },
     ],
   },
   {
@@ -237,12 +298,12 @@ export const WORK: YearBlock[] = [
     year: 2015,
     items: [
       {
-        title: "Solution DB Team Lead",
-        company: "XEROX",
+        title: "Technical Team Lead",
+        company: "HarteHanks",
         summary: "Automation on RHEL; data acquisition/validation pipelines.",
         tags: ["KSH", "Perl", "Oracle","SQL","Linux","DataBase Architecture/Modelling","Leadership",
           "Communication","Conflict Management"],
-        link:"https://www.xerox.com/en-us",
+        link:"https://www.hartehanks.com/",
         language:["English","Romanian"],
         workType:["Remote","Presential"]
       },
@@ -252,12 +313,12 @@ export const WORK: YearBlock[] = [
     year: 2014,
     items: [
       {
-        title: "Solution DB Team Lead",
-        company: "XEROX",
+        title: "Technical Team Lead",
+        company: "HarteHanks",
         summary: "Lead automation for IBM, Gartner, VMware, Symantec, etc.",
         tags: ["KSH", "Perl", "Oracle","SQL","Linux","DataBase Architecture/Modelling","Leadership",
           "Communication","Conflict Management"],
-        link:"https://www.xerox.com/en-us",
+        link:"https://www.hartehanks.com/",
         language:["English","Romanian"],
         workType:["Remote","Presential"]
       },
@@ -267,11 +328,11 @@ export const WORK: YearBlock[] = [
     year: 2013,
     items: [
       {
-        title: "Analyst Programmer-senior",
-        company: "XEROX",
+        title: "Technical Team Lead",
+        company: "HarteHanks",
         summary: "CRUD automation & client data pipelines.",
         tags: ["Perl", "Oracle", "Linux","SQL","KSH"],
-        link:"https://www.xerox.com/en-us",
+        link:"https://www.hartehanks.com/",
         language:["English","Romanian"],
         workType:["Presential"]
       },
@@ -281,11 +342,11 @@ export const WORK: YearBlock[] = [
     year: 2012,
     items: [
       {
-        title: "Analyst Programmer-junior",
-        company: "XEROX",
+        title: "Technical Team Lead",
+        company: "HarteHanks",
         summary: "Initial role; built data processing foundations.",
         tags: ["English","Romanian","Presential","Perl", "SQL", "Linux"],
-        link:"https://www.xerox.com/en-us",
+        link:"https://www.hartehanks.com/",
         language:["English","Romanian"],
         workType:["Presential"]
       },

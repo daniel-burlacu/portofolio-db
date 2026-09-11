@@ -5,12 +5,12 @@ export type ReviewKey =
   'crypto_ws' | 'crypto_ws_hands_on';
 
 const CRYPTO_WS1: ReviewImage = {
-  src: '/reviews/CryptoWorkshops/WS1.png',
+  src: '/letters/eupm-april-2025.png',
   caption: 'Workshop — Crypto in Illicit Political Financing',
 };
 const CRYPTO_WS2: ReviewImage = {
-  src: '/reviews/CryptoWorkshops/WS2.png',
-  caption: 'Workshop — Crypto in Illicit Political Financing (hands-on)',
+  src: '/letters/eupm-may-2025.png',
+  caption: 'EUPM — OSINT-Crypto-Dark Web Lab',
 };
 
 export const REVIEWS: Record<ReviewKey, ReviewImage[]> = {
@@ -28,6 +28,7 @@ export function getReviewsForTitle(title: string): ReviewImage[] | undefined {
   if (t.includes('inspector') || t.includes('seppo')) return REVIEWS.inspectorseppo;
   if (t.includes('xerox')) return REVIEWS.xerox;
 
+  if (t.includes('osint-crypto-dark web')) return REVIEWS.crypto_ws_hands_on;
   if (t.includes('crypto') && t.includes('workshop')) {
     // hands-on gets WS2; otherwise WS1
     if (t.includes('hands-on') || t.includes('hands on')) return REVIEWS.crypto_ws_hands_on;

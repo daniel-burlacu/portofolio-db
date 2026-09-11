@@ -11,7 +11,7 @@ import GenieMountClient  from "@/components/GenieMountClient";
 
 export const metadata: Metadata = {
   title: "Daniel Burlacu — Portfolio",
-  description: "Security, Blockchain & Full-Stack Work",
+  description: "Senior software developer combining cybersecurity, AI, blockchain and cloud architecture. Explore current projects, experience and EUPM letters of appreciation.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

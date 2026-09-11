@@ -198,7 +198,7 @@ const LANGUAGE_FLAG: Record<string, { flag: string; label: string }> = {
 
                   {/* Reviews button (only if images exist) */}
                   {/* Actions: GitHub / Website / Reviews (only those that exist) */}
-                  {(p.github || p.link || reviews) && (
+                  {(p.github || p.link || p.android || reviews) && (
                     <Box sx={{ mt: 1.5 }}>
                       <Stack direction="row" spacing={1} flexWrap="wrap">
                         {p.github && (
@@ -226,6 +226,13 @@ const LANGUAGE_FLAG: Record<string, { flag: string; label: string }> = {
                             rel="noopener noreferrer"
                           >
                             Website
+                          </Button>
+                        )}
+
+                        {p.android && (
+                          <Button size="small" variant="outlined" startIcon={<LaunchIcon />}
+                            component="a" href={p.android} target="_blank" rel="noopener noreferrer">
+                            Android app
                           </Button>
                         )}
 

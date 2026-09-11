@@ -6,12 +6,47 @@ import {
   Select, Stack, Typography, Divider
 } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
+import { EXPERTISE } from '@/data/profile';
 import SkillRadarChart from '@/components/skills/SkillRadarChart';
 import SkillStarsList from '@/components/skills/SkillStarsList';
 
 type Skill = { name: string; stars: number };
 
-const SKILLS: Record<'frontend' | 'backend' | 'leadership' | 'apps', Skill[]> = {
+const SKILLS: Record<'frontend' | 'backend' | 'leadership' | 'apps' | 'ai' | 'cybersecurity', Skill[]> = {
+  // Initial ratings: 2 = foundational knowledge, 3 = practical experience.
+  ai: [
+    { name: 'AI / ML Fundamentals', stars: 2 },
+    { name: 'Generative AI', stars: 3 },
+    { name: 'Foundation Models', stars: 2 },
+    { name: 'Amazon Bedrock', stars: 3 },
+    { name: 'Prompt Engineering', stars: 3 },
+    { name: 'Responsible AI', stars: 2 },
+    { name: 'AI Security & Governance', stars: 2 },
+    { name: 'Model Evaluation', stars: 2 },
+    { name: 'RAG & Embeddings', stars: 2 },
+    { name: 'Fine-tuning Concepts', stars: 2 },
+    { name: 'AWS AI Services', stars: 2 },
+    { name: 'SageMaker Concepts', stars: 2 },
+    { name: 'AI Use Cases', stars: 3 },
+  ],
+  cybersecurity: [
+    { name: 'OWASP Top 10', stars: 3 },
+    { name: 'Web App Testing', stars: 3 },
+    { name: 'Authentication & Access', stars: 3 },
+    { name: 'Secure SDLC', stars: 3 },
+    { name: 'Burp Suite', stars: 3 },
+    { name: 'Kali Linux', stars: 3 },
+    { name: 'Wazuh SIEM', stars: 3 },
+    { name: 'Sysmon Telemetry', stars: 3 },
+    { name: 'Nmap', stars: 3 },
+    { name: 'Metasploit', stars: 3 },
+    { name: 'Network Analysis', stars: 3 },
+    { name: 'Vulnerability Validation', stars: 3 },
+    { name: 'Security Event Analysis', stars: 3 },
+    { name: 'Lab Segmentation', stars: 3 },
+    { name: 'API Security', stars: 3 },
+    { name: 'OSINT & Crypto Tracing', stars: 3 },
+  ],
   frontend: [
     { name: 'Tailwind CSS', stars: 2 },
     { name: 'React Native', stars: 2 },
@@ -69,7 +104,7 @@ const SKILLS: Record<'frontend' | 'backend' | 'leadership' | 'apps', Skill[]> = 
   ],
 };
 
-type Category = keyof typeof SKILLS; // 'frontend' | 'backend' | 'leadership' | 'apps'
+type Category = keyof typeof SKILLS;
 
 export default function SkillsPage() {
   const [category, setCategory] = useState<Category>('frontend');
@@ -89,7 +124,14 @@ export default function SkillsPage() {
 
   return (
     <Container sx={{ py: { xs: 4, md: 8 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Typography variant="h2" sx={{ fontWeight: 900 }}>Skill Radar</Typography>
+      <Typography variant="h2" component="h1" sx={{ fontWeight: 900 }}>Skills & Expertise</Typography>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+        {EXPERTISE.map(item => <Paper key={item.title} sx={{ p: 3 }}>
+          <Typography variant="h6" component="h2" fontWeight={700}>{item.title}</Typography>
+          <Typography sx={{ mt: 1 }}>{item.description}</Typography>
+        </Paper>)}
+      </Box>
+      <Typography variant="h5" component="h2">Skill Radar</Typography>
 
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="center">
         <FormControl size="small" sx={{ minWidth: 220 }}>
@@ -99,12 +141,26 @@ export default function SkillsPage() {
             <MenuItem value="backend">Backend</MenuItem>
             <MenuItem value="leadership">Flow &amp; Leadership</MenuItem>
             <MenuItem value="apps">Apps / Tools</MenuItem>
+            <MenuItem value="ai">AI</MenuItem>
+            <MenuItem value="cybersecurity">Cybersecurity</MenuItem>
           </Select>
         </FormControl>
         <Typography sx={{ opacity: 0.8 }}>
-          Showing {items.length} skills • 5★ max
+          Showing {items.length} skills • Radar shows the top {Math.min(items.length, 8)} • 5★ max
         </Typography>
       </Stack>
+
+      {category === 'ai' && (
+        <Typography color="text.secondary">
+          AWS Certified AI Practitioner topics: AI and ML fundamentals, generative AI,
+          foundation model applications, responsible AI, and security, compliance and governance.
+        </Typography>
+      )}
+      {category === 'cybersecurity' && (
+        <Typography color="text.secondary">
+          Application security, authorized lab testing, secure development and defensive monitoring.
+        </Typography>
+      )}
 
       {/* Two equal, fixed-size boxes; wrap on small screens */}
       <Box
@@ -116,14 +172,14 @@ export default function SkillsPage() {
         }}
       >
         {/* Left: Radar box (fixed size) */}
-       <Paper sx={{ width: BOX_W, height: BOX_H, p: 2, display: 'flex' }}>
+       <Paper sx={{ width: BOX_W, maxWidth: '100%', height: BOX_H, p: 2, display: 'flex' }}>
           <SkillRadarChart items={items} max={5} topN={8} />
         </Paper>
 
         {/* Right: Detailed ratings (fixed size) */}
      <Paper
   sx={{
-    width: BOX_W,
+    width: BOX_W, maxWidth: '100%',
     height: BOX_H,
     p: 2,
     display: 'grid',

@@ -1,11 +1,12 @@
 // src/features/courses/CourseChrome.tsx
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   Box, Drawer, IconButton, List, ListItemButton, ListItemText,
-  Typography, Divider, Stack, Button, useMediaQuery, Accordion, AccordionSummary,
+  Typography, Divider, Stack, Button, Paper, useMediaQuery, Accordion, AccordionSummary,
   AccordionDetails
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -17,26 +18,71 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 type CoursesMap = Record<string, { label: string; chapters: string[] }>;
 
 type Props = {
-  courseKey: string;          // current course (e.g., 'oscp', 'oswe' or your key)
-  chapterIndex: number;       // 0-based
   children: React.ReactNode;  // chapter content
   courses: CoursesMap;        // pass COURSES here
 };
 
 const SIDEBAR_W = 300;
 
-export default function CourseChrome({ courseKey, chapterIndex, children, courses }: Props) {
-  const theme = useTheme();
+type ChapterLinkProps = {
+  courseKey: string;
+  idx: number;
+  title: string;
+  active: boolean;
+  onNavigate: () => void;
+  variant: 'sidebar' | 'drawer';
+};
+
+// Memoized so a chapter change only re-renders the previously/newly active link,
+// not every item in the list.
+const ChapterLink = memo(function ChapterLink({ courseKey, idx, title, active, onNavigate, variant }: ChapterLinkProps) {
+  return (
+    <ListItemButton
+      selected={active}
+      component={Link}
+      href={`/courses/${courseKey}/${idx + 1}`}
+      scroll={false}
+      onClick={onNavigate}
+      sx={{
+        alignItems: 'flex-start',
+        ...(variant === 'sidebar' && { color: active ? 'common.white' : 'success.main' }),
+        '& .MuiListItemText-primary': {
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+          overflow: 'hidden',
+          fontWeight: active ? 700 : 600,
+          ...(variant === 'sidebar' && {
+            color: active ? 'common.white' : 'success.main',
+            transition: 'color 0.2s',
+          }),
+        },
+      }}
+    >
+      <ListItemText primary={`${idx + 1}. ${title}`} />
+    </ListItemButton>
+  );
+});
+
+export default function CourseChrome({ children, courses }: Props) {
+  const pathname = usePathname();
   const router = useRouter();
+  const match = /^\/courses\/([^/]+)\/(\d+)\/?$/.exec(pathname);
+  const courseKey = match?.[1] ?? '';
+  const chapterIndex = Number(match?.[2] ?? 1) - 1;
+  const theme = useTheme();
 
   // Treat <lg as “mobile/tablet” so sidebar is hidden there
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | false>(courseKey);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   const go = (key: string, idx: number) => {
-    router.push(`/courses/${key}/${idx + 1}`);
+    // Go through Next.js router (not raw history.pushState) so only the
+    // chapter segment re-renders instead of the whole route tree.
+    router.push(`/courses/${key}/${idx + 1}`, { scroll: false });
     setDrawerOpen(false);
   };
 
@@ -83,31 +129,17 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
             </AccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>
               <List dense>
-                {def.chapters.map((title, i) => {
-                  const active = key === courseKey && i === chapterIndex;
-                  return (
-                    <ListItemButton
-                      key={`${key}-${i}`}
-                      selected={active}
-                      onClick={() => go(key, i)}
-                      sx={{
-                        alignItems: 'flex-start',
-                        color: active ? 'common.white' : 'success.main',
-                        '& .MuiListItemText-primary': {
-                          display: '-webkit-box',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 2,
-                          overflow: 'hidden',
-                          fontWeight: active ? 700 : 600,
-                          color: active ? 'common.white' : 'success.main',
-                          transition: 'color 0.2s',
-                        },
-                      }}
-                    >
-                      <ListItemText primary={`${i + 1}. ${title}`} />
-                    </ListItemButton>
-                  );
-                })}
+                {def.chapters.map((title, i) => (
+                  <ChapterLink
+                    key={`${key}-${i}`}
+                    courseKey={key}
+                    idx={i}
+                    title={title}
+                    active={key === courseKey && i === chapterIndex}
+                    onNavigate={closeDrawer}
+                    variant="sidebar"
+                  />
+                ))}
               </List>
             </AccordionDetails>
           </Accordion>
@@ -120,7 +152,7 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
   const DrawerContent = (
     <Box sx={{ width: SIDEBAR_W, display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Box sx={{ p: 1.5, display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 800, flex: 1 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 800, flex: 1, minWidth: 140, fontSize: { xs: '1rem', md: '1.25rem' } }}>
             Chapters
             </Typography>
         <IconButton onClick={() => setDrawerOpen(false)} aria-label="Close">
@@ -143,28 +175,17 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
             </AccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>
               <List dense>
-                {def.chapters.map((title, i) => {
-                  const active = key === courseKey && i === chapterIndex;
-                  return (
-                    <ListItemButton
-                      key={`${key}-${i}`}
-                      selected={active}
-                      onClick={() => go(key, i)}
-                      sx={{
-                        alignItems: 'flex-start',
-                        '& .MuiListItemText-primary': {
-                          display: '-webkit-box',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 2,
-                          overflow: 'hidden',
-                          fontWeight: active ? 700 : 600,
-                        },
-                      }}
-                    >
-                      <ListItemText primary={`${i + 1}. ${title}`} />
-                    </ListItemButton>
-                  );
-                })}
+                {def.chapters.map((title, i) => (
+                  <ChapterLink
+                    key={`${key}-${i}`}
+                    courseKey={key}
+                    idx={i}
+                    title={title}
+                    active={key === courseKey && i === chapterIndex}
+                    onNavigate={closeDrawer}
+                    variant="drawer"
+                  />
+                ))}
               </List>
             </AccordionDetails>
           </Accordion>
@@ -182,6 +203,10 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
     <Box
       sx={{
         display: 'grid',
+        width: '100%',
+        maxWidth: 1440,
+        minWidth: 0,
+        px: { xs: 1, md: 2 },
         gridTemplateColumns: { xs: '1fr', lg: `${SIDEBAR_W}px 1fr` }, // sidebar only on lg+
         gap: 2,
         alignItems: 'start',
@@ -202,7 +227,7 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
       {/* Content */}
       <Box sx={{ minWidth: 0 }}>
         {/* Mobile header with hamburger + Prev/Next */}
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+        <Stack direction="row" useFlexGap flexWrap="wrap" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <IconButton
             onClick={() => setDrawerOpen(true)}
             aria-label="Open chapters"
@@ -211,7 +236,7 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h5" sx={{ fontWeight: 800, flex: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, flex: 1, minWidth: 140, fontSize: { xs: '1rem', md: '1.25rem' } }}>
             {chapterTitles[chapterIndex] ?? 'Chapter'}
           </Typography>
 
@@ -225,7 +250,9 @@ export default function CourseChrome({ courseKey, chapterIndex, children, course
           </Stack>
         </Stack>
 
-        {children}
+        <Paper elevation={0} sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 3, width: '100%', minWidth: 0, boxSizing: 'border-box', maxWidth: 1000, mx: 'auto' }}>
+          {children}
+        </Paper>
       </Box>
 
       {/* Mobile/tablet Drawer */}

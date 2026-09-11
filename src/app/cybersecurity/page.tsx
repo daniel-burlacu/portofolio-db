@@ -15,11 +15,11 @@ import {
 // import Grid from '@mui/material/Unstable_Grid2';
 
 export default function CybersecurityLanding() {
-  const entries = Object.entries(COURSES) as [string, { label: string; chapters: string[] }][];
+  const entries = (['oscp', 'oswe'] as const).map(key => [key, COURSES[key]] as const);
   const desc: Record<string, string> = {
     oscp:
       'Get hands-on experience with penetration testing and ethical hacking. Learn to identify and exploit vulnerabilities in various systems, preparing you for the OSCP certification.',
-    oswa:
+    oswe:
       'Master advanced web application security techniques. Learn to find and exploit complex vulnerabilities, enhancing your skills for the OSWE certification.',
   };
 
@@ -32,12 +32,18 @@ return (
     }}>
       <Container maxWidth="lg">
         <Typography variant="h3" sx={{ fontWeight: 900, mb: 1, textAlign: 'center' }}>
-          Cybersecurity Study Guide
+          Cybersecurity
         </Typography>
         <Typography sx={{ opacity: 0.85, mb: 4, textAlign: 'center' }}>
-          Pick a track to start learning. You can resume from the sidebar any time.
+          Practical application security, monitoring and continuous learning.
         </Typography>
 
+        <Paper component="section" sx={{ p: 3, mb: 4 }}>
+          <Typography variant="h5" component="h2" fontWeight={800}>My Cybersecurity Laboratory</Typography>
+          <Typography sx={{ mt: 2 }}>I designed a segmented VMware lab with isolated Windows and Linux systems and vulnerable applications including DVWA, OWASP Mutillidae, Juice Shop and WebGoat. I use Kali Linux, Burp Suite, Nmap, Netcat and Metasploit for authorized testing of injection, file inclusion, authentication, permissions and input validation.</Typography>
+          <Typography sx={{ mt: 2 }}>Wazuh, Sysmon and endpoint agents support investigation of suspicious processes, authentication events and network activity. I document weaknesses, root causes and remediation options, connecting offensive testing with defensive monitoring.</Typography>
+          <Typography sx={{ mt: 2 }}>My learning includes OWASP-focused study, PortSwigger training and OffSec course material. The guides below are study resources.</Typography>
+        </Paper>
         <Grid container spacing={3} justifyContent="center" alignItems="stretch">
           {entries.map(([key, course]) => (
             <Grid key={key} size={{ xs: 12, sm: 10, md: 6 }} display="flex">

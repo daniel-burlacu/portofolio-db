@@ -23,6 +23,33 @@ export const OSCP_CHAPTERS = [
   'Lateral Movement in Active Directory',
 ];
 
+export const OSWE_CHAPTERS = [
+  'JavaScript Prototype Pollution',
+  'Advanced Server-Side Request Forgery (SSRF)',
+  'Web Security Tools and Methodologies',
+  'Source Code Analysis',
+  'Persistent Cross-Site Scripting',
+  'Session Hijacking',
+  '.NET Deserialization',
+  'Remote Code Execution',
+  'Blind SQL Injection',
+  'Data Exfiltration',
+  'Bypassing File Upload Restrictions and File Extension Filters',
+  'PHP Type Juggling with Loose Comparisons',
+  'PostgreSQL Extension and User-Defined Functions',
+  'Bypassing REGEX Restrictions',
+  'Magic Hashes',
+  'Bypassing Character Restrictions',
+  'UDF Reverse Shells',
+  'PostgreSQL Large Objects',
+  'DOM-Based Cross-Site Scripting (Black Box)',
+  'Server-Side Template Injection',
+  'Weak Random Token Generation',
+  'XML External Entity Injection',
+  'RCE via Database Functions',
+  'OS Command Injection via WebSockets (Black Box)',
+];
+
 export const SOLANA_CHAPTERS = [
   'Introduction to Blockchain and Solana',
   'Setting Up Your Development Environment',
@@ -76,7 +103,7 @@ export const POLYGON_CHAPTERS = [
 
 export const COURSES: Record<CourseKey, { label: string; chapters: string[] }> = {
   oscp: { label: 'OSCP', chapters: OSCP_CHAPTERS },
-  oswe: { label: 'OSWE', chapters: [] },
+  oswe: { label: 'OSWE', chapters: OSWE_CHAPTERS },
   solana: { label: 'Solana', chapters: SOLANA_CHAPTERS },
   ethereum: { label: 'Ethereum', chapters: ETHEREUM_CHAPTERS },
   polygon: { label: 'Polygon', chapters: POLYGON_CHAPTERS },

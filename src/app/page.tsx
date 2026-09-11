@@ -4,7 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { keyframes } from '@mui/system';              // <-- add this
 import { Paper, Stack, Box, Typography, Button, Chip, Container, Divider } from '@mui/material';
+import { PROFILE_SECTIONS, EXPERTISE } from '@/data/profile';
+import AppreciationLetters from '@/components/AppreciationLetters';
 import DownloadIcon from '@mui/icons-material/Download';
+import LaunchIcon from '@mui/icons-material/Launch';
 // little animations
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -17,9 +20,9 @@ const floaty = keyframes`
 
 export default function HomePage() {
   return (
-    <Container maxWidth="md" sx={{ py: { xs: 3, md: 5 } }}>
+    <Container maxWidth={false} sx={{ maxWidth: 1440, px: { xs: 2, sm: 3, lg: 5 }, py: { xs: 3, md: 5 }, '& .MuiTypography-body1': { lineHeight: 1.75 } }}>
       <Stack spacing={3.5}>
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
+        <Paper sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} alignItems="center">
 
             {/* Animated circular avatar */}
@@ -73,80 +76,71 @@ export default function HomePage() {
             </Box>
             {/* Intro */}
             <Stack spacing={1.25} sx={{ minWidth: 0 }}>
-              <Typography variant="h3" fontWeight={900}>Daniel Burlacu</Typography>
+              <Typography variant="h3" component="h1" fontWeight={900}>Daniel Burlacu</Typography>
               <Button
                 size="small"
                 variant="outlined"
                 startIcon={<DownloadIcon />}
                 component="a"
-                href="/cv/Daniel_Burlacu_CV.pdf"
+                href="/cv/Daniel_Burlacu_CV.docx"
                 download
-                sx={{ ml: { xs: 0, sm: 1 } }}
+                sx={{ alignSelf: 'flex-start' }}
               >
-                Download CV
+                Download CV (Word)
               </Button>
               <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                Full-stack / Web3 Developer & Blockchain Intelligence Consultant
+                Senior Software Developer | Cybersecurity | AI | Blockchain | Cloud Architecture
               </Typography>
 
               <Typography sx={{ opacity: 0.9 }}>
-                I design and build secure dApps and smart contracts on <b>Solana (Anchor)</b> and
-                {' '}<b>Ethereum (Solidity)</b>, with a focus on <b>DeFi security</b>, transaction
-                analytics, and pragmatic UX. I’m relentlessly curious about how systems work, I don’t
-                give up easily, and I’m a patient, empathetic teammate who communicates early—and asks
-                for help when it unblocks progress.
+                I build secure software, cloud systems and AI-enabled products. My experience combines
+                full-stack engineering and technical leadership with practical cybersecurity testing,
+                blockchain intelligence and Web3 development.
               </Typography>
-
               <Typography sx={{ opacity: 0.9 }}>
-                I regularly join the <b>Turbin3</b> cohort to refine my skills and push forward my
-                long-term project, <b>Solana Ark Foundation</b>—a decentralized platform for veterinary
-                data (on-chain records, NFTs, and governance).
+                Based in Spain. Currently working at Gofore, with Anivera and KronosVera as side projects.
               </Typography>
-
-              <Stack direction="row" spacing={1.5} sx={{ pt: 1 }}>
+              <Chip
+                label="AWS Certified AI Practitioner"
+                component="a"
+                href="https://www.credly.com/badges/52baf543-b18a-4b55-ab8c-400289c7bff0/public_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                clickable
+                color="primary"
+                variant="outlined"
+                sx={{ alignSelf: 'flex-start', maxWidth: '100%' }}
+              />
+              <Stack direction="row" useFlexGap flexWrap="wrap" spacing={1.5} sx={{ pt: 1 }}>
                 <Button component={Link} href="/skills" variant="contained">View Skills</Button>
                 <Button component={Link} href="/work" variant="outlined">See Projects</Button>
+                <Button component="a" href="#appreciation">Appreciation Letters</Button>
               </Stack>
             </Stack>
           </Stack>
         </Paper>
 
-        {/* WHAT I DO */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
-          <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>What I Do</Typography>
-          <Typography sx={{ opacity: 0.9 }}>
-            I turn complex blockchain ideas into secure, usable products. My work spans smart-contract
-            development, protocol integration, audits/assessments, and hands-on training for teams who
-            need to understand Web3 risks and investigative workflows.
-          </Typography>
-          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
-            <Typography>• Smart contracts in <b>Rust/Anchor</b> and <b>Solidity</b> (design → build → test)</Typography>
-            <Typography>• dApps with <b>TypeScript, React, Next.js, Node.js</b></Typography>
-            <Typography>• Security reviews: cryptographic patterns, upgrade safety, auth/roles, fees/gas</Typography>
-            <Typography>• Blockchain intelligence: tracing suspicious flows, workshop delivery</Typography>
-            <Typography>• Infra & delivery: <b>AWS</b>, Docker, CI/CD, monitoring, pragmatic data stores</Typography>
+        <Paper component="section" sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
+          <Typography variant="h5" component="h2" fontWeight={800} sx={{ mb: 2 }}>What I Do</Typography>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 3, md: 4 } }}>
+            {EXPERTISE.map(item => <Box key={item.title}>
+              <Typography component="h3" fontWeight={700}>{item.title}</Typography>
+              <Typography color="text.secondary">{item.description}</Typography>
+            </Box>)}
+          </Box>
+        </Paper>
+        <Paper component="section" sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
+          <Typography variant="h5" component="h2" fontWeight={800} sx={{ mb: 2 }}>Current Focus</Typography>
+          <Stack spacing={2}>
+            <Typography><b>Gofore — AI Expert / Cybersecurity Expert / Senior Software Developer (2026–present).</b> Secure software delivery and an isolated laboratory for offensive and defensive security testing.</Typography>
+            <Typography><b>Finnish Ministry of Finance — current project.</b> Secure systems for framework and budget planning, including a public platform for publishing and visualizing government budget information. TypeScript, React, Node.js, Fastify, PostgreSQL and Azure.</Typography>
+            <Typography><b>Anivera — CEO / CTO, Web3 (2024–ongoing, side project).</b> Product and technical strategy for animal welfare and environmental stewardship, using Solana, Rust, Anchor, FastAPI, Next.js and React.</Typography>
+            <Typography><b>KronosVera — CEO / CTO (2024–ongoing, side project).</b> A lifestyle-tracking product connecting daily habits, wellbeing, energy and recovery. React Native, Expo, Node.js, PostgreSQL, Amazon Bedrock and AWS infrastructure.</Typography>
           </Stack>
         </Paper>
 
-        {/* CURRENT FOCUS */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
-          <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>Current Focus</Typography>
-          <Typography sx={{ opacity: 0.9 }}>
-            <b>Gofore</b>: day-to-day tasks, fully employed from 2023.
-          </Typography>
-          <Typography sx={{ opacity: 0.9, mt: 1 }}>
-            <b>Solana Ark Foundation</b>: decentralized veterinary data with verifiable medical records,
-            vaccination NFTs, and role-based access for cabinets, shelters, and owners. Exploring validator
-            governance, staking economics, and privacy-aware data sharing.
-          </Typography>
-          <Typography sx={{ opacity: 0.9, mt: 1 }}>
-            <b>Turbin3 Cohort</b>: continuing education in Solana program patterns, PDAs/ATAs, CPI safety,
-            and performance—while mentoring peers and contributing to the community.
-          </Typography>
-        </Paper>
-
         {/* SELECTED PROJECTS (teaser) */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
+        <Paper sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h5" fontWeight={800}>Selected Projects</Typography>
             <Button component={Link} href="/work" size="small">View all</Button>
@@ -154,10 +148,16 @@ export default function HomePage() {
           <Divider sx={{ my: 1.5 }} />
           <Stack spacing={1.5}>
             <ProjectItem
-              title="Solana Ark Foundation"
-              blurb="Decentralized veterinary platform—on-chain animal records, NFTs for vaccines/ownership, validator governance."
-              tech={['Solana', 'Anchor', 'TypeScript', 'React', 'Wallet Adapter', 'SolanaKit', 'Rust', 'MUI', 'Mocha']}
-              website="https://solana-ark-foundation.xyz"
+              title="KronosVera"
+              website="https://www.kronosvera.xyz/"
+              blurb="Lifestyle tracking with AI insights connecting daily habits, wellbeing, energy and recovery. Founder-led product delivery from mobile app to production infrastructure."
+              tech={['React Native', 'Expo', 'TypeScript', 'PostgreSQL', 'Amazon Bedrock', 'AWS']}
+            />
+            <ProjectItem
+              title="Anivera"
+              website="https://www.anivera.xyz/"
+              blurb="A Web3 platform for animal welfare and environmental stewardship, supporting secure data and decentralized workflows."
+              tech={['Solana', 'Rust', 'Anchor', 'FastAPI', 'Next.js', 'React']}
             />
             <ProjectItem
               title="Inspector Seppo AI"
@@ -172,28 +172,26 @@ export default function HomePage() {
           </Stack>
         </Paper>
 
-        {/* TRAINING / WORKSHOPS */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
-          <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>
-            Training & Workshops
-          </Typography>
-          <Typography sx={{ opacity: 0.9 }}>
-            I deliver compact, practical sessions on blockchain forensics, DeFi risk, and secure
-            engineering patterns for Web3 teams. Formats range from 2-hour labs to multi-day
-            intensives with hands-on tracing exercises.
-          </Typography>
-          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
-            <Typography>• Transaction tracing on Bitcoin & Ethereum with real tooling</Typography>
-            <Typography>• Solana program security basics: PDAs, CPIs, account constraints</Typography>
-            <Typography>• Smart-contract testing pipelines and incident response</Typography>
-          </Stack>
-          <Stack direction="row" spacing={1.5} sx={{ pt: 1.5 }}>
-            <Button component={Link} href="/blockchains" variant="outlined">See Courses</Button>
+        <AppreciationLetters />
+        {PROFILE_SECTIONS.map(section => (
+          <Paper component="section" key={section.title} sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
+            <Typography variant="h5" component="h2" fontWeight={800} sx={{ mb: 2 }}>{section.title}</Typography>
+            <Stack spacing={2}>{section.paragraphs.map(paragraph => <Typography key={paragraph} sx={{ lineHeight: 1.75 }}>{paragraph}</Typography>)}</Stack>
+          </Paper>
+        ))}
+        <Paper component="section" sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
+          <Typography variant="h5" component="h2" fontWeight={800} sx={{ mb: 2 }}>Education, Training & Languages</Typography>
+          <Stack spacing={1.5}>
+            <Typography><b>Computer Science</b> — Alexandru Ioan Cuza University, Faculty of Computer Science, Iași (2008–2012).</Typography>
+            <Typography><b>Turbin3</b> — Solana Developer (2023); Solana Web3: Ship Your Product (2024–2025).</Typography>
+            <Typography><b>Encode Club</b> — Ethereum Blockchain Developer Bootcamp with Solidity and ZK Bootcamp (2022).</Typography>
+            <Typography><b>Security training</b> — OWASP-focused study, PortSwigger training, OffSec course material, and Udemy training in bug bounty hunting and web penetration testing.</Typography>
+            <Typography><b>Languages</b> — Romanian: native · English: C2 · Spanish: B2 · Swedish: B1.</Typography>
           </Stack>
         </Paper>
 
         {/* VALUES / HOW I WORK */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
+        <Paper sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
           <Typography variant="h5" fontWeight={800} sx={{ mb: 1 }}>
             How I Work
           </Typography>
@@ -206,13 +204,21 @@ export default function HomePage() {
         </Paper>
 
         {/* TECH / TOOLS */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3 }}>
+        <Paper sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h5" fontWeight={800}>Tech I Use</Typography>
             <Button component={Link} href="/skills" size="small">Full skills</Button>
           </Stack>
           <Box sx={{ mt: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {[
+              'Fastify',
+              'Azure',
+              'Amazon Bedrock',
+              'React Native',
+              'Expo',
+              'Wazuh',
+              'Sysmon',
+              'Burp Suite',
               'Solana (Rust)',
               'Anchor',
               'Ethereum (Solidity)',
@@ -239,7 +245,7 @@ export default function HomePage() {
         </Paper>
 
         {/* CONTACT CTA */}
-        <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 3, textAlign: 'center' }}>
+        <Paper sx={{ p: { xs: 2.5, md: 5 }, borderRadius: 2, textAlign: 'center' }}>
           <Typography variant="h5" fontWeight={900}>Let’s build something secure.</Typography>
           <Typography sx={{ opacity: 0.9, mt: 0.5 }}>
             Consulting, audits, workshops, or a new dApp—from idea to delivery.
@@ -267,32 +273,26 @@ function ProjectItem({
   blurb: string;
   tech: string[];
   website?: string;
-
 }) {
   return (
-    <Box>
-      {website ? (
-        <Link
-          href={website}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'none' }}
-        >
-          <Typography
-            variant="subtitle1"
-            fontWeight={700}
-            sx={{
-              color: 'primary.main',                 // same color as your buttons
-              '&:hover': { textDecoration: 'underline' },
-            }}
-          >
-            {title}
-          </Typography>
-        </Link>
-      ) : (
+    <Box sx={{ py: 2.5 }}>
+      <Stack direction="row" alignItems="center" spacing={1.5} flexWrap="wrap">
         <Typography variant="subtitle1" fontWeight={700}>{title}</Typography>
-      )}
-      <Typography sx={{ opacity: 0.9 }}>{blurb}</Typography>
+        {website && (
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<LaunchIcon />}
+            component="a"
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Website
+          </Button>
+        )}
+      </Stack>
+      <Typography sx={{ opacity: 0.9, mt: 0.75 }}>{blurb}</Typography>
       <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
         {tech.map((t) => (
           <Chip key={t} label={t} size="small" variant="outlined" />
