@@ -7,19 +7,6 @@ export const PROFILE_SECTIONS = [
     ]
   },
   {
-    "title": "Interest to Apply",
-    "paragraphs": [
-      "I am naturally curious and analytical, with a strong drive to understand how systems work and explore new technologies. A cybersecurity or application security position would allow me to apply that mindset to practical security challenges, using modern tools and emerging technologies to deliver effective solutions while continuing to develop my expertise."
-    ]
-  },
-  {
-    "title": "Contribution to the EU",
-    "paragraphs": [
-      "Coming from a corporate software development environment, I would bring a strong focus on quality, reliability and user experience to the European Institutions and Agencies. My experience with public-facing websites and registration processes has highlighted opportunities to improve usability, validation and error handling. I would welcome the opportunity to help make these services more accessible, dependable and secure.",
-      "I could contribute most effectively in a cybersecurity or application security role, combining my development experience with practical security testing, AWS cloud architecture knowledge and my AWS Certified AI Practitioner certification. My focus would be on identifying weaknesses, understanding their root causes and working with teams to implement sustainable improvements. My strengths include analytical thinking, technical curiosity and the ability to connect security findings with practical engineering solutions. I bring a user’s perspective alongside a developer’s understanding of systems, and I would apply both to strengthen digital services and support public trust in European institutions."
-    ]
-  },
-  {
     "title": "Strengths: Delivering Training in Moldova",
     "paragraphs": [
       "An achievement I value is delivering training in Moldova, sharing my knowledge and experience with others. This involved preparing the sessions, organising the material and explaining technical concepts clearly to participants. The experience strengthened my communication and presentation skills and gave participants an opportunity to learn from my practical experience. It reinforced the importance of knowledge sharing—a contribution I would be keen to continue within the European Institutions and Agencies."
